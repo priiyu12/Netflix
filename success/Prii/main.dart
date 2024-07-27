@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:netflix/screens/intro_video.dart';
 import 'package:netflix/screens/splash_screen.dart';
 
 void main() {
@@ -21,11 +22,11 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.white, fontSize: 20),
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple).copyWith(
-            background: Colors.black),
+            surface: Colors.black),
         fontFamily: GoogleFonts.ptSans().fontFamily,
         useMaterial3: true,
       ),//ThemeData
-      home: SplashScreen(),
+      home: const IntroVideoScreen(),
     );//MaterialApp
   }
 }
