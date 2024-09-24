@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:showbox/screens/homescreen.dart';
 import 'package:video_player/video_player.dart';
-import 'login_screen.dart';
 
 class IntroVideoScreen extends StatefulWidget {
   const IntroVideoScreen({super.key});

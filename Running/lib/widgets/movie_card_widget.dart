@@ -15,16 +15,13 @@ class MovieCardWidget extends StatelessWidget {
     return FutureBuilder<UpcomingMovieModel>(
       future: future,
       builder: (context, snapshot) {
+        // Debugging: Check the connection state
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator()); // Show loading indicator
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
-        } else if (!snapshot.hasData || snapshot.data!.results.isEmpty) {
-          return const Center(child: Text('No upcoming movies available')); // Handle empty data
+          return const Center(child: CircularProgressIndicator());
         }
-
         // Get the data from the snapshot
-        var data = snapshot.data!.results;
+        var data = snapshot.data?.results;
+        print("Data Results: $data");
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,12 +38,16 @@ class MovieCardWidget extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              height: 250, // Set a fixed height for the ListView
+              height: 250,
               child: ListView.builder(
-                itemCount: data.length,
+                itemCount: data?.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  var movie = data[index];
+                  var movie = data?[index];
+
+                  // Debugging: Print each movie's details
+                  print("Movie: ${movie?.title}, Poster Path: ${movie?.posterPath}");
+
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
@@ -62,9 +63,12 @@ class MovieCardWidget extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Image.network(
-                        "$imageUrl${movie.posterPath}", // Ensure imageUrl is valid
+                        "$imageUrl${movie?.posterPath}",
                         fit: BoxFit.cover,
-                        width: 150, // Adjust the width of each movie card
+                        width: 150,
+                        errorBuilder: (context, error, stackTrace) => const Center(
+                          child: Text("Failed to load image"),
+                        ), // Add error handling for image loading
                       ),
                     ),
                   );

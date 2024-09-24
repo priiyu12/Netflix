@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.showboxFirebase',
   );
 
-  static final FirebaseOptions macos = FirebaseOptions(
+  static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'xxxxxxxxxxxxxxxxxxx',
     appId: 'xxxxxxxxxxxxxxxxxxx',
     messagingSenderId: 'xxxxxxxxxxxxxxxxxxx',

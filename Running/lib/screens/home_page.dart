@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
         // AppBar with custom text and settings button
         appBar: AppBar(
           // Remove default back button
-          leading: SizedBox(),
+          leading: const SizedBox(),
           title: const Text(
             'Home Page',
             style: TextStyle(
@@ -315,7 +315,7 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,

@@ -17,12 +17,12 @@ class AboutUsScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'About Us',
               style: TextStyle(
                 fontSize: 24,
@@ -30,16 +30,16 @@ class AboutUsScreen extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Welcome to ShowBox, your go-to app for the latest movies and shows. Our mission is to provide a comprehensive and enjoyable entertainment experience to our users.',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black54,
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Features:',
               style: TextStyle(
                 fontSize: 18,
@@ -47,8 +47,8 @@ class AboutUsScreen extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 10),
-            const Text(
+            SizedBox(height: 10),
+            Text(
               '- Browse a vast collection of movies and shows\n'
                   '- Receive personalized recommendations\n'
                   '- Stay updated with the latest trends and releases',

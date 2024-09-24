@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
-import 'homescreen.dart'; // Import the HomePage class
+// Import the HomePage class
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -160,10 +160,10 @@ class ProfileCard extends StatelessWidget {
   final String profileName;
 
   const ProfileCard({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.profileName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

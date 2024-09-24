@@ -8,17 +8,11 @@ import 'package:showbox/models/search_model.dart';
 import '../models/top_rated_tv_series.dart';
 import '../models/upcoming_movie_model.dart';
 
-// API base URL
 const baseUrl = "https://api.themoviedb.org/3/";
-// API key
 const key = "?api_key=$apiKey";
-// Base image URL for loading images from TMDB
-const imageUrl = "https://image.tmdb.org/t/p/w500";
-
 late String endPoint;
 
 class ApiServices {
-  // Fetch upcoming movies
   Future<UpcomingMovieModel> getUpcomingMovies() async {
     endPoint = "movie/upcoming";
     final url = "$baseUrl$endPoint$key";
@@ -32,7 +26,6 @@ class ApiServices {
     throw Exception("Failed to load upcoming movies");
   }
 
-  // Fetch now playing movies
   Future<UpcomingMovieModel> getNowPlayingMovie() async {
     endPoint = "movie/now_playing";
     final url = "$baseUrl$endPoint$key";
@@ -46,7 +39,6 @@ class ApiServices {
     throw Exception("Failed to load now playing movies");
   }
 
-  // Fetch top-rated TV series
   Future<TopRatedTvSeries> getTopRatedTvSeries() async {
     endPoint = "tv/top_rated";
     final url = "$baseUrl$endPoint$key";
@@ -60,10 +52,9 @@ class ApiServices {
     throw Exception("Failed to load top-rated TV series");
   }
 
-  // Search for a movie or TV show
   Future<SearchModel> getSearchMovie(String searchText) async {
-    endPoint = "search/tv?query=$searchText";
-    final url = "$baseUrl$endPoint$key";
+    endPoint = "search/movie?query=$searchText";
+    final url = "$baseUrl$endPoint";
 
     if (kDebugMode) {
       print("Search URL: $url");

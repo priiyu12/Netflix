@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:showbox/screens/newhotscreen.dart';
 import 'package:showbox/screens/seachscreen.dart';
-import 'package:showbox/screens/settings.dart';
 import "../screens/homescreen.dart";
 
 class BottomNavBar extends StatefulWidget {
@@ -14,10 +12,9 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
-  // List of widgets to navigate between
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Center(child: Text("Search"),),
+    SearchScreen(),
     Center(child: Text("New&Hot"),),
     Center(child: Text("Settings"),),
   ];

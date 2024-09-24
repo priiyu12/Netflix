@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:showbox/models/top_rated_tv_series.dart';
 import 'package:showbox/models/upcoming_movie_model.dart';
+import 'package:showbox/screens/seachscreen.dart';
 import 'package:showbox/services/api_services.dart';
+import 'package:showbox/widgets/custom_carousel.dart';
 import 'package:showbox/widgets/movie_card_widget.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -15,7 +18,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Center(child: Text("Search")),
+    SearchScreen(),
     Center(child: Text("New&Hot")),
     Center(child: Text("Settings")),
   ];
@@ -80,12 +83,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<UpcomingMovieModel> upcomingFuture;
+  late Future<UpcomingMovieModel> nowPlayingFuture;
+  late Future<TopRatedTvSeries> topRatedSeries;
   ApiServices apiServices = ApiServices();
 
   @override
   void initState() {
     super.initState();
     upcomingFuture = apiServices.getUpcomingMovies();
+    nowPlayingFuture = apiServices.getNowPlayingMovie();
+    topRatedSeries = apiServices.getTopRatedTvSeries();
   }
 
   @override
@@ -107,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Add search functionality here
               },
               child: const Icon(
-                Icons.search,
+                Icons.notifications,
                 size: 30,
                 color: Colors.white,
               ),
@@ -128,11 +135,34 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+          FutureBuilder(
+          future: topRatedSeries,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(  // Allows scrolling if content is too big
+                child: SizedBox(
+                  height: 300, // Set your desired height
+                  child: CustomCarousel(data: snapshot.data!),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
             SizedBox(
               height: 300,
               child: MovieCardWidget(
                   future: upcomingFuture,
                   headLineText: "Upcoming Movies"
+              ),
+            ),
+            const SizedBox(height: 40,),
+            SizedBox(
+              height: 300,
+              child: MovieCardWidget(
+                  future: upcomingFuture,
+                  headLineText: "Now Playing Movies"
               ),
             )
           ],

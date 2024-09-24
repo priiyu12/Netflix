@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import intl package
 import 'package:showbox/models/search_model.dart';
 import 'package:showbox/services/api_services.dart';
 
@@ -46,21 +47,23 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView( // Wrap with SingleChildScrollView
-          child: Column(
-            children: [
-              // Search bar
-              CupertinoSearchTextField(
-                padding: const EdgeInsets.all(10),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, // Align items to the left
+          children: [
+            // Search bar
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Reduce vertical padding
+              child: CupertinoSearchTextField(
+                padding: const EdgeInsets.all(8), // Reduce padding inside the search bar
                 controller: searchController,
                 prefixIcon: const Icon(
                   Icons.search,
                   color: Colors.grey,
-                  size: 30,
+                  size: 25,
                 ),
                 suffixIcon: const Icon(
                   Icons.cancel,
-                  size: 30,
+                  size: 25,
                   color: Colors.grey,
                 ),
                 style: const TextStyle(color: Colors.white),
@@ -75,61 +78,92 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                 },
               ),
-              // Conditional rendering based on search results
-              if (searchModel == null)
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    'Start searching by typing in the search bar above.',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                )
-              else if (searchModel!.results.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    'No results found',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                )
-              else
-                SizedBox(
-                  height: MediaQuery.of(context).size.height, // Ensure height
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 5,
-                      childAspectRatio: 1.2 / 2,
-                    ),
-                    itemCount: searchModel!.results.length,
-                    itemBuilder: (context, index) {
-                      final result = searchModel!.results[index];
-                      final imagePath = result.backdropPath != null
-                          ? "$imageUrl${result.backdropPath}"
-                          : null;
+            ),
 
-                      return Column(
-                        children: [
-                          imagePath != null
-                              ? CachedNetworkImage(
-                            imageUrl: imagePath,
-                            height: 170,
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
-                            placeholder: (context, url) => const CircularProgressIndicator(),
-                          )
-                              : const Icon(
-                            Icons.image_not_supported,
-                            size: 170,
-                            color: Colors.grey,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+            // Conditional rendering based on search results
+            Expanded( // Use Expanded to fill the remaining space
+              child: searchModel == null
+                  ? const Padding(
+                padding: EdgeInsets.only(left: 10.0), // Reduce padding
+                child: Text(
+                  'Start searching by typing in the search bar above.',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-            ],
-          ),
+              )
+                  : searchModel!.results.isEmpty
+                  ? const Padding(
+                padding: EdgeInsets.only(left: 10.0), // Reduce padding
+                child: Text(
+                  'No results found',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              )
+                  : ListView.builder(
+                itemCount: searchModel!.results.length,
+                itemBuilder: (context, index) {
+                  final result = searchModel!.results[index];
+                  final imagePath = result.backdropPath != null
+                      ? "$imageUrl${result.backdropPath}"
+                      : null;
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Add padding between items
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Image on the left
+                        imagePath != null
+                            ? CachedNetworkImage(
+                          imageUrl: imagePath,
+                          height: 150, // Increased image height
+                          width: 100, // Increased image width
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                          placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                        )
+                            : const Icon(
+                          Icons.image_not_supported,
+                          size: 150, // Increased icon size
+                          color: Colors.grey,
+                        ),
+
+                        const SizedBox(width: 15), // Space between image and text
+
+                        // Movie Name on the right
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                result.title ?? "No Title", // Display movie title
+                                maxLines: 2, // Allow up to 2 lines for long titles
+                                overflow: TextOverflow.ellipsis, // Truncate text if too long
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold), // Increased font size
+                              ),
+                              const SizedBox(height: 5), // Space between title and additional info
+                              Text(
+                                // Format the DateTime to a string in YYYY-MM-DD format
+                                result.releaseDate != null
+                                    ? DateFormat('yyyy-MM-dd').format(result.releaseDate)
+                                    : "No Release Date", // Safely handle null values
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16, // Increased font size
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
