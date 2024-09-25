@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:showbox/common/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:showbox/models/movie_detailed_model.dart';
 import 'package:showbox/models/movie_recommendation_model.dart';
 import 'package:showbox/models/search_model.dart';
 import '../models/top_rated_tv_series.dart';
@@ -75,7 +76,7 @@ class ApiServices {
     throw Exception("Failed to load search results");
   }
 
-  Future<MovieRecommendationModel> getPopularMovies() async {
+  Future<MovieRecommendationsModel> getPopularMovies() async {
     endPoint = "movie/popular";
     final url = "$baseUrl$endPoint$key";
 
@@ -83,9 +84,32 @@ class ApiServices {
 
     if (response.statusCode == 200) {
       log("Success: Top Rated TV Series Fetched");
-      return MovieRecommendationModel.fromJson(jsonDecode(response.body));
+      return MovieRecommendationsModel.fromJson(jsonDecode(response.body));
     }
     throw Exception("Failed to load movie recommendation");
   }
 
+  Future<MovieDetailedModel> getMovieDetail(int movieId) async {
+    endPoint = 'movie/$movieId';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      log('success');
+      return MovieDetailedModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load  movie details');
+  }
+
+  Future<MovieRecommendationsModel> getMovieRecommendations(int movieId) async {
+    endPoint = 'movie/$movieId/recommendations';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      log('success');
+      return MovieRecommendationsModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load  movie details');
+  }
 }
