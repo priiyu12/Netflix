@@ -27,24 +27,6 @@ class _SettingsScreenState extends State<SettingScreen> {
           width: 120,
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BottomNavBar(),
-                  ),
-                );
-              },
-              child: const Icon(
-                Icons.search,
-                size: 30,
-                color: Colors.white,
-              ),
-            ),
-          ),
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: InkWell(

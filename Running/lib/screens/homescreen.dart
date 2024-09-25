@@ -8,6 +8,7 @@ import 'package:showbox/widgets/custom_carousel.dart';
 import 'package:showbox/widgets/movie_card_widget.dart';
 
 import 'newhotscreen.dart';
+import 'notificationscreen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -102,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.black,
         title: Image.asset(
           "assets/logo.png", // Ensure the asset exists
@@ -112,15 +114,38 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
-            child: InkWell(
-              onTap: () {
-                // Add search functionality here
-              },
-              child: const Icon(
-                Icons.notifications,
-                size: 30,
-                color: Colors.white,
-              ),
+            child: Stack(
+              children: [
+                InkWell(
+                  onTap: () {
+                    String notificationMessage = "Welcome! You have 3 new notifications.";
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationScreen(notification: notificationMessage),
+                      ),
+                    );
+                  },
+                  child: const Icon(
+                    Icons.notifications,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+                // Display red dot for new notifications
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    height: 10,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           ClipRRect(

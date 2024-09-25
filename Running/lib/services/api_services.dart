@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:showbox/common/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:showbox/models/movie_recommendation_model.dart';
 import 'package:showbox/models/search_model.dart';
 import '../models/top_rated_tv_series.dart';
 import '../models/upcoming_movie_model.dart';
@@ -73,4 +74,18 @@ class ApiServices {
     }
     throw Exception("Failed to load search results");
   }
+
+  Future<MovieRecommendationModel> getPopularMovies() async {
+    endPoint = "movie/popular";
+    final url = "$baseUrl$endPoint$key";
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      log("Success: Top Rated TV Series Fetched");
+      return MovieRecommendationModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception("Failed to load movie recommendation");
+  }
+
 }

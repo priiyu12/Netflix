@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:showbox/models/movie_recommendation_model.dart';
 import 'package:showbox/models/search_model.dart';
 import 'package:showbox/services/api_services.dart';
 
@@ -18,7 +19,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchController = TextEditingController();
   ApiServices apiServices = ApiServices();
-
+  late Future<MovieRecommendationModel> popularMovies;
   SearchModel? searchModel;
 
   // Function to search for movies or TV shows
@@ -38,6 +39,12 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    popularMovies = apiServices.getPopularMovies();
+  }
+
+  @override
   void dispose() {
     searchController.dispose();
     super.dispose();
@@ -48,13 +55,13 @@ class _SearchScreenState extends State<SearchScreen> {
     return SafeArea(
       child: Scaffold(
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align items to the left
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search bar
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Reduce vertical padding
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               child: CupertinoSearchTextField(
-                padding: const EdgeInsets.all(8), // Reduce padding inside the search bar
+                padding: const EdgeInsets.all(8),
                 controller: searchController,
                 prefixIcon: const Icon(
                   Icons.search,
@@ -81,18 +88,82 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
 
             // Conditional rendering based on search results
-            Expanded( // Use Expanded to fill the remaining space
+            Expanded(
               child: searchModel == null
-                  ? const Padding(
-                padding: EdgeInsets.only(left: 10.0), // Reduce padding
-                child: Text(
-                  'Start searching by typing in the search bar above.',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
+                  ? FutureBuilder<MovieRecommendationModel>(
+                future: popularMovies,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  var data = snapshot.data?.results;
+                  print("Data Results: $data");
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "Top Searches:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: data?.length,
+                          scrollDirection: Axis.vertical, // Changed to vertical
+                          itemBuilder: (context, index) {
+                            var movie = data?[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 10.0),
+                              child: Row(
+                                children: [
+                                  // Movie image
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: "$imageUrl${movie?.posterPath}",
+                                      width: 100,
+                                      height: 150,
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                      placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 15), // Space between image and name
+
+                                  // Movie title
+                                  Expanded(
+                                    child: Text(
+                                      movie?.title ?? "No Title",
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
               )
                   : searchModel!.results.isEmpty
                   ? const Padding(
-                padding: EdgeInsets.only(left: 10.0), // Reduce padding
+                padding: EdgeInsets.only(left: 10.0),
                 child: Text(
                   'No results found',
                   style: TextStyle(color: Colors.white, fontSize: 16),
@@ -107,7 +178,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       : null;
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Add padding between items
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 10.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -115,41 +187,45 @@ class _SearchScreenState extends State<SearchScreen> {
                         imagePath != null
                             ? CachedNetworkImage(
                           imageUrl: imagePath,
-                          height: 150, // Increased image height
-                          width: 100, // Increased image width
+                          height: 150,
+                          width: 100,
                           fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                          placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
                         )
                             : const Icon(
                           Icons.image_not_supported,
-                          size: 150, // Increased icon size
+                          size: 100,
                           color: Colors.grey,
                         ),
-
-                        const SizedBox(width: 15), // Space between image and text
+                        const SizedBox(width: 15),
 
                         // Movie Name on the right
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
                             children: [
                               Text(
-                                result.title, // Display movie title
-                                maxLines: 2, // Allow up to 2 lines for long titles
-                                overflow: TextOverflow.ellipsis, // Truncate text if too long
+                                result.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold), // Increased font size
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 5), // Space between title and additional info
+                              const SizedBox(height: 5),
                               Text(
-                                // Format the DateTime to a string in YYYY-MM-DD format
                                 result.releaseDate != null
-                                    ? DateFormat('yyyy-MM-dd').format(result.releaseDate)
-                                    : "No Release Date", // Safely handle null values
+                                    ? DateFormat('yyyy-MM-dd')
+                                    .format(result.releaseDate)
+                                    : "No Release Date",
                                 style: const TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 16, // Increased font size
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
