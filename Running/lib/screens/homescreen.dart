@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:showbox/models/top_rated_tv_series.dart';
 import 'package:showbox/models/upcoming_movie_model.dart';
 import 'package:showbox/screens/seachscreen.dart';
+import 'package:showbox/screens/settings.dart';
 import 'package:showbox/services/api_services.dart';
 import 'package:showbox/widgets/custom_carousel.dart';
 import 'package:showbox/widgets/movie_card_widget.dart';
+
+import 'newhotscreen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -19,8 +22,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     SearchScreen(),
-    Center(child: Text("New&Hot")),
-    Center(child: Text("Settings")),
+    MoreScreen(),
+    SettingScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -153,8 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 300,
               child: MovieCardWidget(
-                  future: upcomingFuture,
-                  headLineText: "Upcoming Movies"
+                  future: nowPlayingFuture,
+                  headLineText: "Now Playing Movies"
               ),
             ),
             const SizedBox(height: 40,),
@@ -162,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 300,
               child: MovieCardWidget(
                   future: upcomingFuture,
-                  headLineText: "Now Playing Movies"
+                  headLineText: "Upcoming Movies"
               ),
             )
           ],

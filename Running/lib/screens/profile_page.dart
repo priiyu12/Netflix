@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'package:showbox/screens/homescreen.dart';
 // Import the HomePage class
 
 class ProfilePage extends StatefulWidget {
@@ -171,7 +171,7 @@ class ProfileCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const BottomNavBar()),
         );
       },
       child: Column(

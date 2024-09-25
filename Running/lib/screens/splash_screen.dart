@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToIntroVideo() {
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const IntroVideoScreen()),
+        MaterialPageRoute(builder: (context) => IntroVideoScreen()),
       );
     });
   }

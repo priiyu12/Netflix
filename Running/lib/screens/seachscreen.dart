@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import intl package
+import 'package:intl/intl.dart';
 import 'package:showbox/models/search_model.dart';
 import 'package:showbox/services/api_services.dart';
 
-const imageUrl = "https://image.tmdb.org/t/p/w500"; // Base image URL
+const imageUrl = "https://image.tmdb.org/t/p/w500";
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -118,10 +118,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 150, // Increased image height
                           width: 100, // Increased image width
                           fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                          placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                          placeholder: (context, url) => const CircularProgressIndicator(),
                         )
                             : const Icon(
                           Icons.image_not_supported,
@@ -137,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                result.title ?? "No Title", // Display movie title
+                                result.title, // Display movie title
                                 maxLines: 2, // Allow up to 2 lines for long titles
                                 overflow: TextOverflow.ellipsis, // Truncate text if too long
                                 style: const TextStyle(

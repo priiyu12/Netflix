@@ -11,27 +11,26 @@ class IntroVideoScreen extends StatefulWidget {
 
 
 class _IntroVideoScreenState extends State<IntroVideoScreen> {
-  late VideoPlayerController _controller; //CONTROLLER THAT HANDLE PLAYBACK OF VIDEO
-  bool _isLoading = true;// SHOWS LOADING SYMBOL
+  late VideoPlayerController _controller;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _initializeVideo(); //INITIALIZE THE VIDEO PLAYER WHEN STATE IS CREATED
+    _initializeVideo();
   }
 
   Future<void> _initializeVideo() async {
-    _controller = VideoPlayerController.asset('assets/astreamingplatform.mp4') // PATH OF VIDEO TO LOAD
+    _controller = VideoPlayerController.asset('assets/astreamingplatform.mp4')
       ..initialize().then((_) {
         setState(() {
-          _isLoading = false; //UPADETE LODING SYMBOL TO INITIALIZE WHEN VIDEO RUN
+          _isLoading = false;
         });
-        _controller.play(); // PHASE TO START VIDEO
+        _controller.play();
       });
 
-    _controller.setLooping(false); //CHECK THE VIDEO DOESNT GO IN LOOP
+    _controller.setLooping(false);
     _controller.addListener(() {
-      //CHECK IF VIDEO HAS ENDED AND NEVIGATE TO LOGIN SCREEN
       if (!_controller.value.isPlaying &&
           _controller.value.isInitialized &&
           (_controller.value.duration == _controller.value.position)) {
@@ -42,7 +41,7 @@ class _IntroVideoScreenState extends State<IntroVideoScreen> {
 
   @override
   void dispose() {
-    _controller.dispose(); // DISPOSE VIDEO CONTROLLER WHEN WIDJETS IS REMOVED
+    _controller.dispose();
     super.dispose();
   }
 
@@ -55,13 +54,13 @@ class _IntroVideoScreenState extends State<IntroVideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, //BACKGROUND COLOR OF SCREEN
+      backgroundColor: Colors.black,
       body: Center(
         child: _isLoading
-            ? const CircularProgressIndicator() //LOADING SYMBOL WHILE VIDEO IS LOADING
+            ? const CircularProgressIndicator()
             : AspectRatio(
-          aspectRatio: _controller.value.aspectRatio, //MAINTAIN ASPECT RADIO OF VIDEO
-          child: VideoPlayer(_controller), //DISPLAY VIDEO WIDGETS
+          aspectRatio: _controller.value.aspectRatio,
+          child: VideoPlayer(_controller),
         ),
       ),
     );
