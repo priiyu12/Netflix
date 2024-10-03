@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:showbox/screens/settings.dart';
 import 'dart:ui'; // Required for the BackdropFilter
 import 'help_page.dart'; // Import HelpPage
 import 'about_us_screen.dart'; // Import AboutUsScreen
@@ -153,7 +154,7 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProfilePage()),
+                        MaterialPageRoute(builder: (context) => const SettingScreen(profiles: [],)),
                       );
                     },
                   ),
@@ -165,7 +166,6 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
   // Method to show settings dialog
   void _showSettingsDialog(BuildContext context) {
     showDialog(

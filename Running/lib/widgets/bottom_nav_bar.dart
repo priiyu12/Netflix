@@ -13,7 +13,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    HomeScreen(profiles: [],),
     SearchScreen(),
     Center(child: Text("New&Hot"),),
     Center(child: Text("Settings"),),

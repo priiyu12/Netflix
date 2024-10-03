@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:showbox/screens/trailer_screen.dart';
 
 import '../common/utils.dart';
 import '../models/movie_detailed_model.dart';
@@ -53,31 +54,47 @@ class MovieDetailScreenState extends State<MovieDetailScreen> {
                 children: [
                   Stack(
                     children: [
-                      Container(
-                        height: size.height * 0.4,
-                        decoration: BoxDecoration(
+                      InkWell(
+                        onTap: () {
+                          // Navigate to the trailer page with the movieId
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TrailerScreen(movieId: widget.movieId),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: size.height * 0.6, // Reduce the height for better view
+                          decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: NetworkImage(
-                                    "$imageUrl${movie.posterPath}"),
-                                fit: BoxFit.cover)),
-                        child: SafeArea(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.arrow_back_ios,
-                                    color: Colors.white),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              )
-                            ],
+                              image: NetworkImage("$imageUrl${movie.posterPath}"),
+                              fit: BoxFit.cover, // BoxFit can be adjusted as per requirement
+                            ),
+                          ),
+                          child: SafeArea(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0), // Add padding for better layout
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
+
+
                   Padding(
                     padding:
                     const EdgeInsets.only(top: 25, left: 10, right: 10),

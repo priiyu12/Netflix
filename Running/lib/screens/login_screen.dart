@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'sign_up_screen.dart';
@@ -26,29 +27,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
       User? user = userCredential.user;
       if (user != null) {
-        // Navigate to profile page
+        // Retrieve user profiles from Firestore
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        List<Map<String, String>> profiles = [];
+
+        if (userDoc.exists) {
+          // Cast the document data to Map<String, dynamic>
+          Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+
+          if (userData != null && userData.containsKey('profiles')) {
+            List<dynamic>? storedProfiles = userData['profiles'] as List<dynamic>?;
+            if (storedProfiles != null) {
+              profiles = List<Map<String, String>>.from(
+                storedProfiles.map((profile) => Map<String, String>.from(profile)),
+              );
+            }
+          } else {
+            // If no profiles exist, initialize with a kids profile
+            profiles = [{'name': 'Kids', 'image': 'assets/i1.jpeg'}];
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .update({'profiles': profiles});
+          }
+        }
+
+        // Navigate to ProfilePage with the retrieved profiles
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProfilePage()),
+          MaterialPageRoute(
+            builder: (context) => ProfilePage(profiles: profiles),
+          ),
         );
       }
     } catch (e) {
-      // Handle errors
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Login Failed'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      print('Error signing in: $e');
     }
   }
 

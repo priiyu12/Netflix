@@ -6,7 +6,8 @@ import 'package:showbox/screens/profile_page.dart';
 import 'package:showbox/widgets/bottom_nav_bar.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({super.key});
+  final List<Map<String, String>> profiles;
+  const SettingScreen({super.key, required this.profiles});
 
   @override
   State<SettingScreen> createState() => _SettingsScreenState();
@@ -14,7 +15,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingScreen> {
   bool _isDarkMode = false; // For Theme Mode
-  String _videoQuality = 'Medium'; // For Video Quality
+  String _videoQuality = 'Medium';
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,7 @@ class _SettingsScreenState extends State<SettingScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProfilePage(), // Navigate to About Us screen
+                  builder: (context) => const ProfilePage(profiles: [],), // Navigate to About Us screen
                 ),
               );
             },

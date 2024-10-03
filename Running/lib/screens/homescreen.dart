@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:showbox/models/top_rated_tv_series.dart';
 import 'package:showbox/models/upcoming_movie_model.dart';
+import 'package:showbox/screens/profile_page.dart';
 import 'package:showbox/screens/seachscreen.dart';
 import 'package:showbox/screens/settings.dart';
 import 'package:showbox/services/api_services.dart';
@@ -11,7 +12,8 @@ import 'newhotscreen.dart';
 import 'notificationscreen.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+  final List<Map<String, String>> profiles;
+  const BottomNavBar({super.key, required this.profiles});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -21,10 +23,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    HomeScreen(profiles: [],),
     SearchScreen(),
     MoreScreen(),
-    SettingScreen(),
+    SettingScreen(profiles: [],),
   ];
 
   void _onItemTapped(int index) {
@@ -79,7 +81,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final List<Map<String, String>> profiles;
+  const HomeScreen({super.key, required this.profiles});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -148,36 +151,48 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Container(
-              color: Colors.blue, // Placeholder for profile image
-              height: 27,
-              width: 27,
-              // Use Image.network or AssetImage for actual profile image
+          GestureDetector(
+            onTap: () {
+              // Navigate to the profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(profiles: [],), // Replace ProfilePage with your actual profile page widget
+                ),
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Container(
+                color: Colors.blue, // Placeholder for profile image
+                height: 27,
+                width: 27,
+                // Use Image.network or AssetImage for actual profile image
+              ),
             ),
           ),
+
           const SizedBox(width: 20),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-          FutureBuilder(
-          future: topRatedSeries,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return SingleChildScrollView(  // Allows scrolling if content is too big
-                child: SizedBox(
-                  height: 300, // Set your desired height
-                  child: CustomCarousel(data: snapshot.data!),
-                ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
+            FutureBuilder(
+              future: topRatedSeries,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(  // Allows scrolling if content is too big
+                    child: SizedBox(
+                      height: 300, // Set your desired height
+                      child: CustomCarousel(data: snapshot.data!),
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
             SizedBox(
               height: 300,
               child: MovieCardWidget(

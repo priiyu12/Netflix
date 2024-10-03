@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:showbox/screens/homescreen.dart';
+import 'package:showbox/screens/login_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class IntroVideoScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _IntroVideoScreenState extends State<IntroVideoScreen> {
 
   void _navigateToLogin() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const BottomNavBar()), //NAVIGATE TO LOG IN SCREEN
+      MaterialPageRoute(builder: (context) => const LoginScreen()), //NAVIGATE TO LOG IN SCREEN
     );
   }
 

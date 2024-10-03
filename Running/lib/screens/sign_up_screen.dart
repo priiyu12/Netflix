@@ -51,7 +51,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _signUp() async {
     try {
-      // Create user with email and password
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
@@ -59,46 +58,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       User? user = userCredential.user;
       if (user != null) {
-        print('User ID: ${user.uid}'); // Print the User ID for debugging
-
-        // Store user data in Firestore
-        await _firestore.collection('users').doc(user.uid).set({
+        // Initialize user profile with a default kids profile
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'name': _nameController.text.trim(),
-          'mobile': _mobileController.text.trim(),
           'email': _emailController.text.trim(),
-          'createdAt': FieldValue.serverTimestamp(),
+          'profiles': [{'name': 'Kids', 'image': 'assets/i1.jpeg'}], // Default kids profile
         });
 
-        print("User data stored successfully"); // Log success
-
-        // Navigate to profile page
+        // Navigate to Profile Page with the initial kids profile
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProfilePage()),
+          MaterialPageRoute(builder: (context) => const ProfilePage(profiles: [{'name': 'Kids', 'image': 'assets/i1.jpeg'}])),
         );
       }
     } catch (e) {
-      // Log error
-      print("Error storing user data: $e");
-
-      // Handle errors
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Sign Up Failed'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      print('Error signing up: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

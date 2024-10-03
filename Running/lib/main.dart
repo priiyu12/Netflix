@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue, // Keep the primary color from the first app
+        primarySwatch: Colors.blue,
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white, fontSize: 24),
           bodyMedium: TextStyle(color: Colors.white, fontSize: 20),
